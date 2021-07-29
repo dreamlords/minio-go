@@ -35,12 +35,13 @@ const (
 	BucketPolicyReadOnly               = "readonly"
 	BucketPolicyReadWrite              = "readwrite"
 	BucketPolicyWriteOnly              = "writeonly"
+	BucketPolicyGetOnly                = "getonly"
 )
 
 // IsValidBucketPolicy - returns true if policy is valid and supported, false otherwise.
 func (p BucketPolicy) IsValidBucketPolicy() bool {
 	switch p {
-	case BucketPolicyNone, BucketPolicyReadOnly, BucketPolicyReadWrite, BucketPolicyWriteOnly:
+	case BucketPolicyNone, BucketPolicyReadOnly, BucketPolicyReadWrite, BucketPolicyWriteOnly, BucketPolicyGetOnly:
 		return true
 	}
 	return false
@@ -218,7 +219,7 @@ func newObjectStatement(policy BucketPolicy, bucketName string, prefix string) (
 		Sid:       "",
 	}
 
-	if policy == BucketPolicyReadOnly {
+	if policy == BucketPolicyReadOnly || policy == BucketPolicyGetOnly {
 		statement.Actions = readOnlyObjectActions
 	} else if policy == BucketPolicyWriteOnly {
 		statement.Actions = writeOnlyObjectActions
